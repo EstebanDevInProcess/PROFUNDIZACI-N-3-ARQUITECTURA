@@ -2,18 +2,18 @@ public class GeneradorComprobante {
 
     public void generar(String tipo, String contenido) {
 
-        Comprobante comprobante;
+        CreadorComprobante creador;
 
         if (tipo.equalsIgnoreCase("PDF")) {
-            comprobante = new ComprobantePDF();
+            creador = new CreadorPDF();
         } else if (tipo.equalsIgnoreCase("HTML")) {
-            comprobante = new ComprobanteHTML();
+            creador = new CreadorHTML();
         } else {
             throw new IllegalArgumentException(
                 "Tipo de comprobante no soportado"
             );
         }
 
-        comprobante.generar(contenido);
+        creador.emitir(contenido);
     }
 }
