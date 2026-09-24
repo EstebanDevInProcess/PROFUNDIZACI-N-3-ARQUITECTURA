@@ -12,6 +12,11 @@ public class GeneradorComprobante {
             ComprobanteHTML comprobante = new ComprobanteHTML();
             comprobante.generar(contenido);
 
+        } else if (tipo.equalsIgnoreCase("XML")) {
+
+            ComprobanteXML comprobante = new ComprobanteXML();
+            comprobante.generar(contenido);
+
         } else {
             throw new IllegalArgumentException(
                 "Tipo de comprobante no soportado"
