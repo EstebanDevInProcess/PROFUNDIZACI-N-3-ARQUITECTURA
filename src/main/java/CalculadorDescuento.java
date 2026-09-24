@@ -16,6 +16,10 @@ public class CalculadorDescuento {
 
             return valorCompra * 0.20;
 
+        } else if (tipo.equals("ANIVERSARIO")) {
+
+            return valorCompra * 0.25;
+
         }
 
         return 0;
