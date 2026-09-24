@@ -22,15 +22,10 @@ public class LogisticaServiceAjustado {
 
         if (proveedor.equals("RAPID")) {
 
-            String ruta =
-                origen + "-" + destino;
-
-            int gramos =
-                (int) (pesoKg * 1000);
-
-            return rapidExpress.getShippingPrice(
-                ruta,
-                gramos
+            return new AdaptadorRapidExpress(rapidExpress).calcularCosto(
+                origen,
+                destino,
+                pesoKg
             );
         }
 
