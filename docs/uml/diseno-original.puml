@@ -1,0 +1,22 @@
+@startuml diseno-original
+title AgroConecta — diseño original (LogisticaServiceAjustado)
+skinparam classAttributeIconSize 0
+hide empty members
+interface ServicioEnvio {
+  + calcularCosto(origen : String, destino : String, peso : double) : double
+}
+class LogisticaServiceAjustado {
+  - proveedorLocal : ServicioEnvio
+  - rapidExpress : RapidExpressAPI
+  + cotizar(proveedor : String, origen : String, destino : String, pesoKg : double) : double
+}
+class RapidExpressAPI <<externa>> {
+  + getShippingPrice(route : String, weightInGrams : int) : double
+}
+LogisticaServiceAjustado --> ServicioEnvio : if "LOCAL"
+LogisticaServiceAjustado --> RapidExpressAPI : if "RAPID"
+note bottom of LogisticaServiceAjustado
+  Traduce ruta y kg→g dentro del servicio.
+  Campos nunca inicializados (NPE).
+end note
+@enduml
