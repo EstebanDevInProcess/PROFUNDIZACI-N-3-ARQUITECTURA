@@ -16,6 +16,9 @@ public final class ConfiguracionComprobantes {
             .registrar(new CreadorPDF())
             .registrar(new CreadorHTML())
             .registrar(new CreadorXML())
-            .registrar(new CreadorJSON());
+            .registrar(new CreadorJSON())
+            // Formatos particulares de aliados comerciales (nombres de ejemplo)
+            .registrar(new CreadorAliado("ALIADO_ANDINO", "Aliado Andino"))
+            .registrar(new CreadorAliado("ALIADO_SABANA", "Aliado Sabana"));
     }
 }
