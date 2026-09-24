@@ -14,6 +14,8 @@ public final class ConfiguracionComprobantes {
     public static RegistroCreadores registroPorDefecto() {
         return new RegistroCreadores()
             .registrar(new CreadorPDF())
-            .registrar(new CreadorHTML());
+            .registrar(new CreadorHTML())
+            .registrar(new CreadorXML())
+            .registrar(new CreadorJSON());
     }
 }
