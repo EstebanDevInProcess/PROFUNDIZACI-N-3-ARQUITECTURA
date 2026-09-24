@@ -1,0 +1,72 @@
+@startuml diseno-propuesto
+title TurismoCundinamarca — Motor de descuentos con Strategy
+skinparam classAttributeIconSize 0
+hide empty members
+
+class CalculadorDescuento <<Context>> {
+  - catalogo : CatalogoPoliticas
+  + calcular(tipo : String, valorCompra : double) : double
+  + calcular(tipo : String, compra : Compra) : double
+}
+class CatalogoPoliticas <<Selección y gestión>> {
+  + registrar(p : PoliticaDescuento) : CatalogoPoliticas
+  + reemplazar(p : PoliticaDescuento) : CatalogoPoliticas
+  + activar(codigo : String) : CatalogoPoliticas
+  + desactivar(codigo : String) : CatalogoPoliticas
+  + buscarActiva(codigo : String) : Optional<PoliticaDescuento>
+  + codigosActivos() : Set<String>
+}
+interface PoliticaDescuento <<Strategy>> {
+  + codigo() : String
+  + calcular(compra : Compra) : double
+}
+class Compra <<record>> {
+  valor : double
+  municipio : String
+  fecha : LocalDate
+  + {static} deValor(valor : double) : Compra
+}
+class DescuentoPorcentual <<ConcreteStrategy>> {
+  - porcentaje : double
+}
+class PromocionTemporal <<ConcreteStrategy>> {
+  - porcentaje : double
+  - desde : LocalDate
+  - hasta : LocalDate
+}
+class DescuentoPorMunicipio <<ConcreteStrategy>> {
+  - porcentajePorMunicipio : Map<String, Double>
+  + {static} region(codigo, pct, municipios...) : DescuentoPorMunicipio
+}
+class DescuentoConTope <<ConcreteStrategy>> {
+  - porcentaje : double
+  - tope : double
+}
+class ConfiguracionDescuentos <<Raíz de composición>> {
+  + {static} catalogoPorDefecto() : CatalogoPoliticas
+}
+
+CalculadorDescuento --> CatalogoPoliticas
+CalculadorDescuento ..> PoliticaDescuento : delega
+CatalogoPoliticas "1" o-- "*" PoliticaDescuento
+PoliticaDescuento <|.. DescuentoPorcentual
+PoliticaDescuento <|.. PromocionTemporal
+PoliticaDescuento <|.. DescuentoPorMunicipio
+PoliticaDescuento <|.. DescuentoConTope
+PoliticaDescuento ..> Compra
+ConfiguracionDescuentos ..> CatalogoPoliticas : construye
+
+note bottom of DescuentoPorcentual
+  FRECUENTE 10 %, TEMPORADA_BAJA 15 %,
+  CONVENIO 20 % = 3 instancias
+end note
+note bottom of PromocionTemporal
+  ANIVERSARIO, VACACIONES_MITAD_ANIO
+end note
+note bottom of DescuentoPorMunicipio
+  PROMO_REGIONAL_SUMAPAZ, DESCUENTO_MUNICIPIO
+end note
+note bottom of DescuentoConTope
+  CAJA_COMPENSACION
+end note
+@enduml
