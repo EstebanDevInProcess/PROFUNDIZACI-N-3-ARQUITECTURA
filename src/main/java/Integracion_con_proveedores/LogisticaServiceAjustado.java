@@ -3,6 +3,7 @@ public class LogisticaServiceAjustado {
 
     private ServicioEnvio proveedorLocal;
     private RapidExpressAPI rapidExpress;
+    private EnviosAndesAPI enviosAndes;
 
     public double cotizar(
             String proveedor,
@@ -32,6 +33,20 @@ public class LogisticaServiceAjustado {
                 ruta,
                 gramos
             );
+        }
+
+        if (proveedor.equals("ANDES")) {
+
+            double libras =
+                pesoKg * 2.20462262185;
+
+            long centavos = enviosAndes.consultarTarifa(
+                origen,
+                destino,
+                libras
+            );
+
+            return centavos / 100.0;
         }
 
         throw new IllegalArgumentException();
