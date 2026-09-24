@@ -1,0 +1,21 @@
+@startuml diseno-original
+title Sistema multicanal de comprobantes — diseño original
+skinparam classAttributeIconSize 0
+hide empty members
+class GeneradorComprobante {
+  + generar(tipo : String, contenido : String) : void
+}
+class ComprobantePDF {
+  + generar(contenido : String) : void
+}
+class ComprobanteHTML {
+  + generar(contenido : String) : void
+}
+GeneradorComprobante ..> ComprobantePDF : new (si tipo = "PDF")
+GeneradorComprobante ..> ComprobanteHTML : new (si tipo = "HTML")
+note bottom of GeneradorComprobante
+  Cadena if/else por String.
+  Sin interfaz común: cada formato
+  nuevo = nueva rama + nueva clase.
+end note
+@enduml

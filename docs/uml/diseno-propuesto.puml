@@ -1,0 +1,80 @@
+@startuml diseno-propuesto
+title Sistema multicanal de comprobantes — Factory Method (diseño propuesto)
+skinparam classAttributeIconSize 0
+hide empty members
+
+class GeneradorComprobante <<Cliente>> {
+  - registro : RegistroCreadores
+  + GeneradorComprobante()
+  + GeneradorComprobante(registro : RegistroCreadores)
+  + generar(tipo : String, contenido : String) : void
+}
+
+class RegistroCreadores <<Selección>> {
+  - creadores : Map<String, CreadorComprobante>
+  + registrar(c : CreadorComprobante) : RegistroCreadores
+  + buscar(tipo : String) : Optional<CreadorComprobante>
+  + tiposSoportados() : Set<String>
+}
+
+class ConfiguracionComprobantes <<Raíz de composición>> {
+  + {static} registroPorDefecto() : RegistroCreadores
+}
+
+abstract class CreadorComprobante <<Creador>> {
+  - tipo : String
+  + getTipo() : String
+  # {abstract} crearComprobante() : Comprobante
+  + emitir(contenido : String) : void
+}
+
+class CreadorPDF <<Creador concreto>>
+class CreadorHTML <<Creador concreto>>
+class CreadorXML <<Creador concreto>>
+class CreadorJSON <<Creador concreto>>
+class CreadorAliado <<Creador concreto>> {
+  - nombreAliado : String
+}
+
+interface Comprobante <<Producto>> {
+  + generar(contenido : String) : void
+}
+class ComprobantePDF <<Producto concreto>>
+class ComprobanteHTML <<Producto concreto>>
+class ComprobanteXML <<Producto concreto>>
+class ComprobanteJSON <<Producto concreto>>
+class ComprobanteAliado <<Producto concreto>> {
+  - nombreAliado : String
+}
+
+GeneradorComprobante --> RegistroCreadores : usa
+GeneradorComprobante ..> CreadorComprobante : delega emitir()
+GeneradorComprobante ..> ConfiguracionComprobantes : constructor por defecto
+ConfiguracionComprobantes ..> RegistroCreadores : construye
+RegistroCreadores "1" o-- "*" CreadorComprobante : creadores
+
+CreadorComprobante <|-- CreadorPDF
+CreadorComprobante <|-- CreadorHTML
+CreadorComprobante <|-- CreadorXML
+CreadorComprobante <|-- CreadorJSON
+CreadorComprobante <|-- CreadorAliado
+CreadorComprobante ..> Comprobante : usa
+
+Comprobante <|.. ComprobantePDF
+Comprobante <|.. ComprobanteHTML
+Comprobante <|.. ComprobanteXML
+Comprobante <|.. ComprobanteJSON
+Comprobante <|.. ComprobanteAliado
+
+CreadorPDF ..> ComprobantePDF : <<create>>
+CreadorHTML ..> ComprobanteHTML : <<create>>
+CreadorXML ..> ComprobanteXML : <<create>>
+CreadorJSON ..> ComprobanteJSON : <<create>>
+CreadorAliado ..> ComprobanteAliado : <<create>>
+
+note right of CreadorComprobante
+  crearComprobante() = FACTORY METHOD
+  emitir() usa el producto sin
+  conocer su clase concreta
+end note
+@enduml
