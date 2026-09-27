@@ -93,7 +93,7 @@ Antes de modificar el código se documentó su comportamiento real, incluidos lo
 
 ### 2.2 Causas del acoplamiento
 
-**Pregunta central: ¿qué cambio futuro provocaría modificaciones en varias partes?** Justamente el cambio anunciado. En seis meses llegan **XML, JSON y dos formatos de aliados**: cuatro cambios, y **cada uno obliga a abrir `GeneradorComprobante`**. Esto se comprobó de forma experimental en la rama `demo/xml-sin-patron` (§8.2).
+**Pregunta central: ¿qué cambio futuro provocaría modificaciones en varias partes?** Justamente el cambio anunciado. En seis meses llegan **XML, JSON y dos formatos de aliados**: cuatro cambios, y **cada uno obliga a abrir `GeneradorComprobante`**. Esto se comprobó de forma experimental en la rama `caso1-demo-xml-sin-patron` (§8.2).
 
 Las causas son cuatro:
 
@@ -307,18 +307,18 @@ La refactorización se hizo en **pasos pequeños**, cada uno con la línea base 
 
 | Commit | Tag | Cambio | Pruebas |
 |---|---|---|---|
-| `chore: importar código original…` | `v0-original` | Código entregado, sin cambios + `../../pom.xml` | — |
-| `test: pruebas de caracterización…` | `v1-linea-base` | 10 pruebas de línea base sobre el código **original** | 10/10 ✅ |
+| `chore: importar código original…` | `caso1-v0-original` | Código entregado, sin cambios + `../../pom.xml` | — |
+| `test: pruebas de caracterización…` | `caso1-v1-linea-base` | 10 pruebas de línea base sobre el código **original** | 10/10 ✅ |
 | `refactor: extraer la interfaz Comprobante…` | | Rol Producto | 10/10 ✅ |
 | `refactor: introducir Factory Method…` | | Creador abstracto + creadores concretos | 10/10 ✅ |
 | `refactor: eliminar el condicional con RegistroCreadores…` | | Registro + inyección + raíz de composición | 10/10 ✅ |
-| `test: pruebas unitarias del diseño refactorizado` | `v2-refactor` | Pruebas de creadores, registro y coordinador aislado | 24/24 ✅ |
+| `test: pruebas unitarias del diseño refactorizado` | `caso1-v2-refactor` | Pruebas de creadores, registro y coordinador aislado | 24/24 ✅ |
 | `feat: nuevo requisito - comprobantes XML y JSON` | | **Nuevo requisito de cambio** | 28/28 ✅ |
-| `feat: formatos particulares para dos aliados…` | `v3-nuevo-requisito` | Creador parametrizable para aliados | 30/30 ✅ |
+| `feat: formatos particulares para dos aliados…` | `caso1-v3-nuevo-requisito` | Creador parametrizable para aliados | 30/30 ✅ |
 | `docs: …` | | Informe, README y UML | 30/30 ✅ |
-| rama `demo/xml-sin-patron` | | XML agregado **sin patrón** (solo para comparar) | 10/10 ✅ |
+| rama `caso1-demo-xml-sin-patron` | | XML agregado **sin patrón** (solo para comparar) | 10/10 ✅ |
 
-Comandos útiles: `git log --oneline --graph --all`, `git diff v1-linea-base v2-refactor -- src/main`.
+Comandos útiles: `git log --oneline --graph --all`, `git diff caso1-v1-linea-base caso1-v2-refactor -- src/main`.
 
 ---
 
@@ -326,8 +326,8 @@ Comandos útiles: `git log --oneline --graph --all`, `git diff v1-linea-base v2-
 
 ### 7.1 Estrategia
 
-1. **Antes de refactorizar** se escribieron las pruebas de caracterización y se ejecutaron sobre el código original (tag `v1-linea-base`).
-2. **El mismo archivo de pruebas**, sin ninguna modificación, se ejecutó después de cada paso. Se verifica con `git diff v1-linea-base main -- src/test/java/CaracterizacionGeneradorComprobanteTest.java`, que no muestra diferencias.
+1. **Antes de refactorizar** se escribieron las pruebas de caracterización y se ejecutaron sobre el código original (tag `caso1-v1-linea-base`).
+2. **El mismo archivo de pruebas**, sin ninguna modificación, se ejecutó después de cada paso. Se verifica con `git diff caso1-v1-linea-base caso1-final -- src/test/java/CaracterizacionGeneradorComprobanteTest.java`, que no muestra diferencias.
 3. Se agregaron pruebas del nuevo diseño y del nuevo requisito.
 
 ### 7.2 Suites
@@ -346,10 +346,10 @@ Comandos útiles: `git log --oneline --graph --all`, `git diff v1-linea-base v2-
 
 | Momento | Código evaluado | Línea base (10) | Total |
 |---|---|---|---|
-| Antes | `v1-linea-base` (código original) | 10/10 ✅ | 10/10 |
+| Antes | `caso1-v1-linea-base` (código original) | 10/10 ✅ | 10/10 |
 | Durante | Cada commit `refactor:` | 10/10 ✅ | 10/10 |
-| Después | `v2-refactor` | 10/10 ✅ | 24/24 |
-| Nuevo requisito | `v3-nuevo-requisito` | 10/10 ✅ | 30/30 |
+| Después | `caso1-v2-refactor` | 10/10 ✅ | 24/24 |
+| Nuevo requisito | `caso1-v3-nuevo-requisito` | 10/10 ✅ | 30/30 |
 
 > **Evidencia:** ejecutar `mvn test` en cada tag (ver README) y adjuntar las capturas del resultado de Maven/IDE y del reporte JaCoCo (`target/site/jacoco/index.html`).
 
@@ -378,11 +378,11 @@ Comandos útiles: `git log --oneline --graph --all`, `git diff v1-linea-base v2-
 
 El mismo requisito se implementó en los dos diseños y se midió con `git show --stat`:
 
-| | Sin patrón (rama `demo/xml-sin-patron`) | Con Factory Method (`main`) |
+| | Sin patrón (rama `caso1-demo-xml-sin-patron`) | Con Factory Method (`main`) |
 |---|---|---|
 | Archivos existentes modificados | `GeneradorComprobante.java` (**+5 líneas en la lógica central**) | `ConfiguracionComprobantes.java` (**+1 línea** de registro) |
 | Archivos nuevos | 1 (`ComprobanteXML`) | 2 (`ComprobanteXML`, `CreadorXML`) |
-| ¿Se modificó el coordinador? | **Sí** | **No** (`git log v2-refactor..main -- src/main/java/GeneradorComprobante.java` devuelve 0 commits) |
+| ¿Se modificó el coordinador? | **Sí** | **No** (`git log caso1-v2-refactor..caso1-final -- src/main/java/GeneradorComprobante.java` devuelve 0 commits) |
 | Complejidad ciclomática del coordinador | 3 → 4 | 1 → 1 |
 | Riesgo de regresión en PDF/HTML | Se editó el mismo método que los genera | Nulo en el coordinador; la línea base lo confirma |
 
@@ -475,7 +475,7 @@ flowchart TB
 ## 10. Respuestas a las preguntas de reflexión
 
 - **¿Qué problema de diseño se observa realmente en el código?** La creación de los comprobantes está acoplada al coordinador mediante un condicional por texto y `new` de clases concretas sin contrato común.
-- **¿Qué evidencia muestra que el diseño actual dificulta el cambio?** Al agregar XML en el diseño original se modificó el método central (+5 líneas; complejidad ciclomática 3→4), y eso se repetiría con cada uno de los 4 formatos anunciados (rama `demo/xml-sin-patron`).
+- **¿Qué evidencia muestra que el diseño actual dificulta el cambio?** Al agregar XML en el diseño original se modificó el método central (+5 líneas; complejidad ciclomática 3→4), y eso se repetiría con cada uno de los 4 formatos anunciados (rama `caso1-demo-xml-sin-patron`).
 - **¿Qué principio orienta la mejora?** Principalmente Abierto/Cerrado, apoyado por Inversión de Dependencias y Responsabilidad Única.
 - **¿Qué alternativas existen antes de un patrón GoF?** Se evaluaron nueve (§4). La principal competidora fue el mapa de lambdas (A6).
 - **¿Qué complejidad introduce el patrón?** Dos clases por formato, indirección y un paso de registro obligatorio (§8.3).

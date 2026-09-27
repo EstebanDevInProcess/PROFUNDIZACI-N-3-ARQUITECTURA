@@ -94,7 +94,7 @@ classDiagram
 
 | ID | Code smell / problema | Ubicación | Evidencia | Consecuencia |
 |---|---|---|---|---|
-| CS1 | **Dependencias nunca inicializadas (defecto latente)** | `LogisticaServiceAjustado`, campos `proveedorLocal`, `rapidExpress` | No hay constructor ni *setters*. Con `new LogisticaServiceAjustado()` toda cotización válida lanza `NullPointerException` (probado en `DefectoDependenciasNoInicializadasTest`, tag `v1-linea-base`). | La clase **no funciona ni se puede probar** sin reflexión. Síntoma de haber modificado el servicio "a mano" sin pruebas. |
+| CS1 | **Dependencias nunca inicializadas (defecto latente)** | `LogisticaServiceAjustado`, campos `proveedorLocal`, `rapidExpress` | No hay constructor ni *setters*. Con `new LogisticaServiceAjustado()` toda cotización válida lanza `NullPointerException` (probado en `DefectoDependenciasNoInicializadasTest`, tag `caso2-v1-linea-base`). | La clase **no funciona ni se puede probar** sin reflexión. Síntoma de haber modificado el servicio "a mano" sin pruebas. |
 | CS2 | **Condicionales por proveedor** (*Switch Statements*) | `cotizar`: `if ("LOCAL")`, `if ("RAPID")` | Cada operador nuevo agrega una rama | Complejidad ciclomática 3 hoy; llegaría a 6 con los tres operadores anunciados. |
 | CS3 | **Detalles de una API externa filtrados a la lógica principal** | Rama `RAPID` | `origen + "-" + destino`, `(int) (pesoKg * 1000)`, `getShippingPrice` | El servicio conoce el formato de ruta y la unidad de peso de un tercero. Si RapidExpress cambia su API, cambia el núcleo. |
 | CS4 | **Dependencia rígida de una clase concreta externa** | Campo `RapidExpressAPI rapidExpress` | El cliente depende del *Adaptee* y no de la abstracción | Viola DIP. No se puede sustituir ni simular Rapid sin tocar el servicio. |
@@ -106,7 +106,7 @@ classDiagram
 
 ### 2.2 Causas del acoplamiento
 
-**Pregunta central: ¿qué cambio futuro provocaría modificaciones en varias partes?** La integración de los **tres operadores adicionales** ya anunciados. Con el diseño actual, cada uno exige un campo nuevo, una rama nueva y su código de traducción **dentro** de `LogisticaServiceAjustado`. Se comprobó en la rama `demo/andes-sin-patron`: integrar un solo operador añadió 15 líneas al servicio (§8.2).
+**Pregunta central: ¿qué cambio futuro provocaría modificaciones en varias partes?** La integración de los **tres operadores adicionales** ya anunciados. Con el diseño actual, cada uno exige un campo nuevo, una rama nueva y su código de traducción **dentro** de `LogisticaServiceAjustado`. Se comprobó en la rama `caso2-demo-andes-sin-patron`: integrar un solo operador añadió 15 líneas al servicio (§8.2).
 
 Las causas son cuatro:
 
@@ -323,14 +323,14 @@ sequenceDiagram
 
 | Commit | Tag | Cambio | Pruebas |
 |---|---|---|---|
-| `chore: importar código original…` | `v0-original` | Código entregado + `../../pom.xml` | — |
-| `test: pruebas de caracterización…` | `v1-linea-base` | 10 de línea base + 1 del servicio original + 2 que **documentan el defecto CS1** | 13/13 ✅ |
+| `chore: importar código original…` | `caso2-v0-original` | Código entregado + `../../pom.xml` | — |
+| `test: pruebas de caracterización…` | `caso2-v1-linea-base` | 10 de línea base + 1 del servicio original + 2 que **documentan el defecto CS1** | 13/13 ✅ |
 | `refactor: extraer AdaptadorRapidExpress…` | | La traducción sale del servicio y pasa al adaptador | 13/13 ✅ |
 | `refactor: inyectar proveedores como ServicioEnvio…` | | Constructor con `Map`, sin `if` por proveedor, raíz de composición. **Corrige CS1 por diseño.** | 11/11 ✅ (\*) |
-| `test: pruebas unitarias del adaptador y del cliente aislado` | `v2-refactor` | Adaptador, uso con el `LogisticaService` original, cliente con dobles | 19/19 ✅ |
-| `feat: nuevo requisito - integrar tres operadores…` | `v3-nuevo-requisito` | EnviosAndes, CargaExpress, MotoEnvios | 25/25 ✅ |
+| `test: pruebas unitarias del adaptador y del cliente aislado` | `caso2-v2-refactor` | Adaptador, uso con el `LogisticaService` original, cliente con dobles | 19/19 ✅ |
+| `feat: nuevo requisito - integrar tres operadores…` | `caso2-v3-nuevo-requisito` | EnviosAndes, CargaExpress, MotoEnvios | 25/25 ✅ |
 | `docs: …` | | Informe, README, UML | 25/25 ✅ |
-| rama `demo/andes-sin-patron` | | Un operador agregado **sin patrón** (solo para comparar) | 13/13 ✅ |
+| rama `caso2-demo-andes-sin-patron` | | Un operador agregado **sin patrón** (solo para comparar) | 13/13 ✅ |
 
 (\*) Las 2 pruebas del defecto se retiran porque el constructor sin argumentos que lo provocaba **ya no existe**: el compilador impide reproducir el defecto.
 
@@ -341,7 +341,7 @@ sequenceDiagram
 ### 7.1 Estrategia
 
 1. **Antes de refactorizar** se caracterizó el comportamiento. Como la clase no permitía inyectar dependencias (CS1), el objeto bajo prueba se ensambló **por reflexión**, una técnica estándar para caracterizar código legado.
-2. El ensamblaje quedó aislado en **un único archivo de soporte**, `FabricaServicioBajoPrueba`. Después de la refactorización **solo ese archivo cambia** (pasa a usar `ConfiguracionLogistica`). El archivo `CaracterizacionLogisticaTest.java` **no se modifica**, lo que se verifica con `git diff v1-linea-base main -- src/test/java/Integracion_con_proveedores/CaracterizacionLogisticaTest.java`, que no muestra diferencias.
+2. El ensamblaje quedó aislado en **un único archivo de soporte**, `FabricaServicioBajoPrueba`. Después de la refactorización **solo ese archivo cambia** (pasa a usar `ConfiguracionLogistica`). El archivo `CaracterizacionLogisticaTest.java` **no se modifica**, lo que se verifica con `git diff caso2-v1-linea-base caso2-final -- src/test/java/Integracion_con_proveedores/CaracterizacionLogisticaTest.java`, que no muestra diferencias.
 3. La librería externa **no se modifica** ni siquiera en pruebas: se usa `RapidExpressEspia`, una subclase de prueba que registra los argumentos y delega en el cálculo real.
 
 ### 7.2 Suites
@@ -359,9 +359,9 @@ sequenceDiagram
 
 | Momento | Código | Línea base (10 + 1) | Total |
 |---|---|---|---|
-| Antes | `v1-linea-base` (original) | 11/11 ✅ | 13/13 |
-| Después | `v2-refactor` | 11/11 ✅ | 19/19 |
-| Nuevo requisito | `v3-nuevo-requisito` | 11/11 ✅ | 25/25 |
+| Antes | `caso2-v1-linea-base` (original) | 11/11 ✅ | 13/13 |
+| Después | `caso2-v2-refactor` | 11/11 ✅ | 19/19 |
+| Nuevo requisito | `caso2-v3-nuevo-requisito` | 11/11 ✅ | 25/25 |
 
 > **Evidencia:** ejecutar `mvn test` en cada tag y adjuntar capturas, más el reporte JaCoCo.
 
@@ -388,9 +388,9 @@ sequenceDiagram
 
 ### 8.2 Ejecución del nuevo requisito de cambio: "integrar EnviosAndes"
 
-| | Sin patrón (rama `demo/andes-sin-patron`) | Con Adapter (`main`) |
+| | Sin patrón (rama `caso2-demo-andes-sin-patron`) | Con Adapter (`main`) |
 |---|---|---|
-| ¿Se modifica el servicio de logística? | **Sí**: +15 líneas (campo, rama, conversión a libras y a pesos) | **No** (`git log v2-refactor..main -- …/LogisticaServiceAjustado.java` devuelve 0 commits) |
+| ¿Se modifica el servicio de logística? | **Sí**: +15 líneas (campo, rama, conversión a libras y a pesos) | **No** (`git log caso2-v2-refactor..caso2-final -- …/LogisticaServiceAjustado.java` devuelve 0 commits) |
 | Complejidad ciclomática de `cotizar` | 3 → 4 | 2 → 2 |
 | Dependencias externas del servicio | 1 → 2 | 0 → 0 |
 | ¿Dónde vive la conversión kg→lb y centavos→pesos? | En la lógica principal | En `AdaptadorEnviosAndes` (24 líneas, probado de forma aislada) |

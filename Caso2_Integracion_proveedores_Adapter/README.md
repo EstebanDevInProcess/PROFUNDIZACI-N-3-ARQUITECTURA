@@ -22,21 +22,21 @@ Cobertura (JaCoCo): `target/site/jacoco/index.html`
 
 | Tag | Estado | Pruebas |
 |---|---|---|
-| `v0-original` | Código entregado, sin modificaciones | — |
-| `v1-linea-base` | Original + pruebas de caracterización (incluye defecto documentado) | 13/13 |
-| `v2-refactor` | Adapter + inyección de proveedores | 19/19 |
-| `v3-nuevo-requisito` | Tres operadores adicionales | 25/25 |
+| `caso2-v0-original` | Código entregado, sin modificaciones | — |
+| `caso2-v1-linea-base` | Original + pruebas de caracterización (incluye defecto documentado) | 13/13 |
+| `caso2-v2-refactor` | Adapter + inyección de proveedores | 19/19 |
+| `caso2-v3-nuevo-requisito` | Tres operadores adicionales | 25/25 |
 
 ```bash
-git checkout v1-linea-base && mvn test
-git checkout v3-nuevo-requisito && mvn test
+git checkout caso2-v1-linea-base; mvn test
+git checkout caso2-v3-nuevo-requisito; mvn test
 git checkout main
 ```
 
-Rama de comparación `demo/andes-sin-patron`: el mismo operador agregado **sin** el patrón.
+Rama de comparación `caso2-demo-andes-sin-patron`: el mismo operador agregado **sin** el patrón.
 
 ```bash
-git diff v1-linea-base demo/andes-sin-patron --stat
+git diff caso2-v1-linea-base caso2-demo-andes-sin-patron --stat
 ```
 
 ## Estructura (paquete `Integracion_con_proveedores`)

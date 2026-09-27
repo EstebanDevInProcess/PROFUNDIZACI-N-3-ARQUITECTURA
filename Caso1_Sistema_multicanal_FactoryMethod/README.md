@@ -26,22 +26,22 @@ Cada hito tiene un *tag* de Git:
 
 | Tag | Estado | Pruebas |
 |---|---|---|
-| `v0-original` | Código entregado, sin modificaciones | — |
-| `v1-linea-base` | Código original + 10 pruebas de caracterización | 10/10 |
-| `v2-refactor` | Diseño refactorizado con Factory Method | 24/24 |
-| `v3-nuevo-requisito` | Nuevos formatos XML, JSON y aliados | 30/30 |
+| `caso1-v0-original` | Código entregado, sin modificaciones | — |
+| `caso1-v1-linea-base` | Código original + 10 pruebas de caracterización | 10/10 |
+| `caso1-v2-refactor` | Diseño refactorizado con Factory Method | 24/24 |
+| `caso1-v3-nuevo-requisito` | Nuevos formatos XML, JSON y aliados | 30/30 |
 
 ```bash
-git checkout v1-linea-base && mvn test     # ANTES: línea base sobre el código original
-git checkout v2-refactor   && mvn test     # DESPUÉS: misma línea base + pruebas nuevas
+git checkout caso1-v1-linea-base; mvn test     # ANTES: línea base sobre el código original
+git checkout caso1-v2-refactor; mvn test     # DESPUÉS: misma línea base + pruebas nuevas
 git checkout main
 ```
 
-La rama `demo/xml-sin-patron` agrega XML **sin** el patrón, solo para comparar el impacto del cambio:
+La rama `caso1-demo-xml-sin-patron` agrega XML **sin** el patrón, solo para comparar el impacto del cambio:
 
 ```bash
-git diff v1-linea-base demo/xml-sin-patron --stat   # modifica GeneradorComprobante
-git diff v2-refactor  v3-nuevo-requisito --stat -- src/main   # GeneradorComprobante no aparece
+git diff caso1-v1-linea-base caso1-demo-xml-sin-patron --stat   # modifica GeneradorComprobante
+git diff caso1-v2-refactor  caso1-v3-nuevo-requisito --stat -- src/main   # GeneradorComprobante no aparece
 ```
 
 ## Estructura

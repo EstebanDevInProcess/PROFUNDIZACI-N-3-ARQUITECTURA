@@ -90,7 +90,7 @@ classDiagram
 
 **Pregunta central: ¿qué cambio futuro provocaría modificaciones en varias partes?** Cualquiera de los cinco anunciados por Mercadeo:
 
-- **Aniversario** (como porcentaje fijo): nueva rama en el calculador. Se comprobó en la rama `demo/aniversario-sin-patron` (§8.2).
+- **Aniversario** (como porcentaje fijo): nueva rama en el calculador. Se comprobó en la rama `caso3-demo-aniversario-sin-patron` (§8.2).
 - **Municipio / regional / temporal**: no caben en la firma actual. Además de la rama, obligan a **cambiar la firma** de `calcular` y, en cascada, **el proceso de compra** que la invoca.
 - **Cambiar un porcentaje o suspender una campaña**: editar el calculador y volver a desplegar.
 
@@ -316,14 +316,14 @@ catalogo.registrar(new DescuentoConTope("CAJA_X", 0.25, 150_000)); // incorpora 
 
 | Commit | Tag | Cambio | Pruebas |
 |---|---|---|---|
-| `chore: importar código original…` | `v0-original` | Código del enunciado + `../../pom.xml` | — |
-| `test: pruebas de caracterización…` | `v1-linea-base` | 11 pruebas de línea base sobre el **original** | 11/11 ✅ |
+| `chore: importar código original…` | `caso3-v0-original` | Código del enunciado + `../../pom.xml` | — |
+| `test: pruebas de caracterización…` | `caso3-v1-linea-base` | 11 pruebas de línea base sobre el **original** | 11/11 ✅ |
 | `refactor: extraer la estrategia PoliticaDescuento y el objeto parámetro Compra` | | Estrategia + `DescuentoPorcentual` + `Compra` | 11/11 ✅ |
 | `refactor: eliminar el condicional con CatalogoPoliticas…` | | Catálogo + inyección + raíz de composición | 11/11 ✅ |
-| `test: pruebas unitarias de estrategias, catálogo y contexto aislado` | `v2-refactor` | Estrategia, catálogo, contexto con doble, cambios en caliente | 26/26 ✅ |
-| `feat: nuevo requisito - cinco políticas de Mercadeo` | `v3-nuevo-requisito` | 3 estrategias nuevas; 5 políticas configuradas | 33/33 ✅ |
+| `test: pruebas unitarias de estrategias, catálogo y contexto aislado` | `caso3-v2-refactor` | Estrategia, catálogo, contexto con doble, cambios en caliente | 26/26 ✅ |
+| `feat: nuevo requisito - cinco políticas de Mercadeo` | `caso3-v3-nuevo-requisito` | 3 estrategias nuevas; 5 políticas configuradas | 33/33 ✅ |
 | `docs: …` | | Informe, README, UML | 33/33 ✅ |
-| rama `demo/aniversario-sin-patron` | | Aniversario agregado **sin patrón** (solo para comparar) | 11/11 ✅ |
+| rama `caso3-demo-aniversario-sin-patron` | | Aniversario agregado **sin patrón** (solo para comparar) | 11/11 ✅ |
 
 ---
 
@@ -331,8 +331,8 @@ catalogo.registrar(new DescuentoConTope("CAJA_X", 0.25, 150_000)); // incorpora 
 
 ### 7.1 Estrategia
 
-1. Las pruebas de caracterización se escribieron **antes** de refactorizar y se ejecutaron sobre el código original (`v1-linea-base`).
-2. El archivo `CaracterizacionCalculadorDescuentoTest.java` **no cambia** en ningún commit. Se verifica con `git diff v1-linea-base main -- src/test/java/CaracterizacionCalculadorDescuentoTest.java`, que no muestra diferencias.
+1. Las pruebas de caracterización se escribieron **antes** de refactorizar y se ejecutaron sobre el código original (`caso3-v1-linea-base`).
+2. El archivo `CaracterizacionCalculadorDescuentoTest.java` **no cambia** en ningún commit. Se verifica con `git diff caso3-v1-linea-base caso3-final -- src/test/java/CaracterizacionCalculadorDescuentoTest.java`, que no muestra diferencias.
 3. Una prueba verifica que la aritmética sea **idéntica bit a bit** (`assertEquals(33.33 * 0.15, …)` sin tolerancia), porque en cálculos monetarios con `double` cambiar el orden de las operaciones puede alterar el resultado.
 
 ### 7.2 Suites
@@ -349,9 +349,9 @@ catalogo.registrar(new DescuentoConTope("CAJA_X", 0.25, 150_000)); // incorpora 
 
 | Momento | Código | Línea base (11) | Total |
 |---|---|---|---|
-| Antes | `v1-linea-base` (original) | 11/11 ✅ | 11/11 |
-| Después | `v2-refactor` | 11/11 ✅ | 26/26 |
-| Nuevo requisito | `v3-nuevo-requisito` | 11/11 ✅ | 33/33 |
+| Antes | `caso3-v1-linea-base` (original) | 11/11 ✅ | 11/11 |
+| Después | `caso3-v2-refactor` | 11/11 ✅ | 26/26 |
+| Nuevo requisito | `caso3-v3-nuevo-requisito` | 11/11 ✅ | 33/33 |
 
 > **Evidencia:** ejecutar `mvn test` en cada tag y adjuntar capturas, más el reporte JaCoCo.
 
@@ -379,11 +379,11 @@ catalogo.registrar(new DescuentoConTope("CAJA_X", 0.25, 150_000)); // incorpora 
 
 ### 8.2 Ejecución del nuevo requisito de cambio
 
-| | Sin patrón (rama `demo/aniversario-sin-patron`) | Con Strategy (`main`) |
+| | Sin patrón (rama `caso3-demo-aniversario-sin-patron`) | Con Strategy (`main`) |
 |---|---|---|
 | Aniversario como porcentaje fijo | +4 líneas **en el calculador**; complejidad ciclomática 4 → 5 | 1 registro en la configuración |
 | Aniversario **con vigencia**, municipio, regional | **Imposible sin cambiar la firma** de `calcular` y, por tanto, el proceso de compra | Soportado por `Compra`, sin cambiar la firma original |
-| ¿Se modificó `CalculadorDescuento` para las 5 políticas? | Sí, en cada una | **No** (`git log v2-refactor..main -- src/main/java/CalculadorDescuento.java` devuelve 0 commits) |
+| ¿Se modificó `CalculadorDescuento` para las 5 políticas? | Sí, en cada una | **No** (`git log caso3-v2-refactor..caso3-final -- src/main/java/CalculadorDescuento.java` devuelve 0 commits) |
 | Archivos existentes modificados | — | Solo `ConfiguracionDescuentos` |
 | Archivos nuevos | — | 3 estrategias (130 líneas, probadas de forma aislada) |
 

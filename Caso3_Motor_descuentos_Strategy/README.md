@@ -22,12 +22,12 @@ Cobertura (JaCoCo): `target/site/jacoco/index.html`
 
 | Tag | Estado | Pruebas |
 |---|---|---|
-| `v0-original` | Código del enunciado, sin modificaciones | — |
-| `v1-linea-base` | Original + 11 pruebas de caracterización | 11/11 |
-| `v2-refactor` | Strategy + catálogo de políticas | 26/26 |
-| `v3-nuevo-requisito` | Cinco políticas nuevas de Mercadeo | 33/33 |
+| `caso3-v0-original` | Código del enunciado, sin modificaciones | — |
+| `caso3-v1-linea-base` | Original + 11 pruebas de caracterización | 11/11 |
+| `caso3-v2-refactor` | Strategy + catálogo de políticas | 26/26 |
+| `caso3-v3-nuevo-requisito` | Cinco políticas nuevas de Mercadeo | 33/33 |
 
-Rama de comparación `demo/aniversario-sin-patron`: una política agregada **sin** el patrón.
+Rama de comparación `caso3-demo-aniversario-sin-patron`: una política agregada **sin** el patrón.
 
 ## Estructura
 
