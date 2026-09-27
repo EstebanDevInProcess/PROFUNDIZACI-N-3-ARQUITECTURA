@@ -1,0 +1,78 @@
+@startuml diseno-propuesto
+title AgroConecta — Integración de proveedores logísticos con Adapter (de objetos)
+skinparam classAttributeIconSize 0
+hide empty members
+
+interface ServicioEnvio <<Target>> {
+  + calcularCosto(origen : String, destino : String, peso : double) : double
+}
+
+class LogisticaServiceAjustado <<Client>> {
+  - proveedores : Map<String, ServicioEnvio>
+  + cotizar(proveedor : String, origen : String, destino : String, pesoKg : double) : double
+  + proveedoresDisponibles() : Set<String>
+}
+class LogisticaService <<Client original>> {
+  - servicioEnvio : ServicioEnvio
+  + cotizar(origen : String, destino : String, peso : double) : double
+}
+class ConfiguracionLogistica <<Raíz de composición>> {
+  + {static} crearServicio(local : ServicioEnvio, rapid : RapidExpressAPI) : LogisticaServiceAjustado
+}
+
+package "Adaptadores" {
+  class AdaptadorRapidExpress <<Adapter>> {
+    - api : RapidExpressAPI
+    + calcularCosto(...) : double
+  }
+  class AdaptadorEnviosAndes <<Adapter>> {
+    - api : EnviosAndesAPI
+    + calcularCosto(...) : double
+  }
+  class AdaptadorCargaExpress <<Adapter>> {
+    - cliente : CargaExpressClient
+    + calcularCosto(...) : double
+  }
+  class AdaptadorMotoEnvios <<Adapter>> {
+    - servicio : MotoEnviosService
+    + calcularCosto(...) : double
+  }
+}
+
+package "Librerías externas (no modificables)" #EEEEEE {
+  class RapidExpressAPI <<Adaptee>> {
+    + getShippingPrice(route : String, weightInGrams : int) : double
+  }
+  class EnviosAndesAPI <<Adaptee>> {
+    + consultarTarifa(o : String, d : String, pesoLibras : double) : long
+  }
+  class CargaExpressClient <<Adaptee>> {
+    + solicitarCotizacion(parametros : Map<String,String>) : String
+  }
+  class MotoEnviosService <<Adaptee>> {
+    + precio(o : String, d : String, pesoKg : double) : double
+  }
+}
+
+class ProveedorLogisticoException <<excepción de la aplicación>>
+
+LogisticaServiceAjustado "1" o-- "*" ServicioEnvio : proveedores
+LogisticaService --> ServicioEnvio
+ServicioEnvio <|.. AdaptadorRapidExpress
+ServicioEnvio <|.. AdaptadorEnviosAndes
+ServicioEnvio <|.. AdaptadorCargaExpress
+ServicioEnvio <|.. AdaptadorMotoEnvios
+AdaptadorRapidExpress --> RapidExpressAPI : adapta
+AdaptadorEnviosAndes --> EnviosAndesAPI : adapta
+AdaptadorCargaExpress --> CargaExpressClient : adapta
+AdaptadorMotoEnvios --> MotoEnviosService : adapta
+AdaptadorCargaExpress ..> ProveedorLogisticoException
+AdaptadorMotoEnvios ..> ProveedorLogisticoException
+ConfiguracionLogistica ..> LogisticaServiceAjustado : ensambla
+ConfiguracionLogistica ..> AdaptadorRapidExpress : crea
+
+note right of AdaptadorRapidExpress
+  ruta = origen + "-" + destino
+  gramos = (int) (peso * 1000)
+end note
+@enduml
