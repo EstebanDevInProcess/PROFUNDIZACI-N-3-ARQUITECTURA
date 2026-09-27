@@ -73,4 +73,4 @@ servicio.cotizar("ANDES", "Fusagasugá", "Bogotá", 10.0);  // 33.07
 
 ## Diagramas
 
-Mermaid en el informe (GitHub los muestra). PlantUML en `docs/uml/`.
+Mermaid en el informe (GitHub los muestra). PlantUML en `docs/uml`.

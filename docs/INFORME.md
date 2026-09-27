@@ -323,7 +323,7 @@ sequenceDiagram
 
 | Commit | Tag | Cambio | Pruebas |
 |---|---|---|---|
-| `chore: importar código original…` | `v0-original` | Código entregado + `pom.xml` | — |
+| `chore: importar código original…` | `v0-original` | Código entregado + `../../pom.xml` | — |
 | `test: pruebas de caracterización…` | `v1-linea-base` | 10 de línea base + 1 del servicio original + 2 que **documentan el defecto CS1** | 13/13 ✅ |
 | `refactor: extraer AdaptadorRapidExpress…` | | La traducción sale del servicio y pasa al adaptador | 13/13 ✅ |
 | `refactor: inyectar proveedores como ServicioEnvio…` | | Constructor con `Map`, sin `if` por proveedor, raíz de composición. **Corrige CS1 por diseño.** | 11/11 ✅ (\*) |
