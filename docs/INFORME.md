@@ -307,7 +307,7 @@ La refactorización se hizo en **pasos pequeños**, cada uno con la línea base 
 
 | Commit | Tag | Cambio | Pruebas |
 |---|---|---|---|
-| `chore: importar código original…` | `v0-original` | Código entregado, sin cambios + `pom.xml` | — |
+| `chore: importar código original…` | `v0-original` | Código entregado, sin cambios + `../../pom.xml` | — |
 | `test: pruebas de caracterización…` | `v1-linea-base` | 10 pruebas de línea base sobre el código **original** | 10/10 ✅ |
 | `refactor: extraer la interfaz Comprobante…` | | Rol Producto | 10/10 ✅ |
 | `refactor: introducir Factory Method…` | | Creador abstracto + creadores concretos | 10/10 ✅ |

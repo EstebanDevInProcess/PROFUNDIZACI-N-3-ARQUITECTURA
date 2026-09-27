@@ -87,5 +87,5 @@ generador.generar("json", "Compra #1002");  // Generando comprobante JSON: Compr
 ## Diagramas
 
 Los diagramas del informe están en Mermaid (GitHub los muestra automáticamente). Las versiones PlantUML
-están en `docs/uml/` y se pueden renderizar en https://www.plantuml.com/plantuml o con la extensión
+están en `docs/uml` y se pueden renderizar en https://www.plantuml.com/plantuml o con la extensión
 PlantUML del IDE.
