@@ -62,4 +62,4 @@ catalogo.desactivar("TEMPORADA_BAJA");                           // suspender un
 
 ## Diagramas
 
-Mermaid en el informe (GitHub los muestra). PlantUML en `docs/uml/`.
+Mermaid en el informe (GitHub los muestra). PlantUML en `docs/uml`.

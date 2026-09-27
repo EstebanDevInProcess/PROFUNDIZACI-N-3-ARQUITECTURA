@@ -316,7 +316,7 @@ catalogo.registrar(new DescuentoConTope("CAJA_X", 0.25, 150_000)); // incorpora 
 
 | Commit | Tag | Cambio | Pruebas |
 |---|---|---|---|
-| `chore: importar código original…` | `v0-original` | Código del enunciado + `pom.xml` | — |
+| `chore: importar código original…` | `v0-original` | Código del enunciado + `../../pom.xml` | — |
 | `test: pruebas de caracterización…` | `v1-linea-base` | 11 pruebas de línea base sobre el **original** | 11/11 ✅ |
 | `refactor: extraer la estrategia PoliticaDescuento y el objeto parámetro Compra` | | Estrategia + `DescuentoPorcentual` + `Compra` | 11/11 ✅ |
 | `refactor: eliminar el condicional con CatalogoPoliticas…` | | Catálogo + inyección + raíz de composición | 11/11 ✅ |
