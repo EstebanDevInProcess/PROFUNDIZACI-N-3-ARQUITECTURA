@@ -1,0 +1,13 @@
+@startuml diseno-original
+title TurismoCundinamarca — diseño original
+skinparam classAttributeIconSize 0
+class CalculadorDescuento {
+  + calcular(tipo : String, valorCompra : double) : double
+}
+note right of CalculadorDescuento
+  if FRECUENTE → valor × 0.10
+  else if TEMPORADA_BAJA → valor × 0.15
+  else if CONVENIO → valor × 0.20
+  else → 0
+end note
+@enduml
